@@ -1,5 +1,4 @@
 from pprint import pprint
-
 import requests
 import json
 
@@ -8,7 +7,7 @@ with open('VK_token.txt', 'r') as file_object:
     vk_token = file_object.read().strip()
 vk_id = input('Введите свой Id ВКонтакте: ')
 yadisk_token = input('Введите токен с Полигона Яндекс.Диска: ')
-new_folder = input('Введите имя папки, в которую будут загружены фото: ')
+new_folder = input('Введите имя папки Яндекс.Диска, в которую будут загружены фото: ')
 
 
 class VkUser:
@@ -60,11 +59,11 @@ def sorted_photos():
             sizes = item.get('sizes')
             url = sizes[-1].get('url')
             url_list.append(url)
-            type = sizes[-1].get('type')
-            type_list.append(type)
+            size_type = sizes[-1].get('type')
+            type_list.append(size_type)
             result_list = list(zip(url_list, type_list))
             photos_dict = dict(zip(likes_list, result_list))
-        return photos_dict
+    return photos_dict
 
 
 photos_dict_sorted = sorted_photos()
@@ -78,7 +77,7 @@ def get_json():
         result_dict['file_name'] = [items[0]]
         result_dict['size'] = [items[1][1]]
         result_list.append(result_dict)
-        result_json = json.dumps(result_list)
+    result_json = json.dumps(result_list)
     return result_json
 
 
@@ -136,13 +135,9 @@ class YaUploader:
 if __name__ == '__main__':
     yandex_disk = YaUploader(token=yadisk_token)
     yandex_disk.get_new_folder()
-
-if __name__ == '__main__':
     for i in photos_dict_sorted.items():
         uploader = YaUploader(token=yadisk_token)
         uploader.upload(f'{new_folder}/{i[0]}.jpg', i[1][0])
-
-if __name__ == '__main__':
     yandex_disk = YaUploader(token=yadisk_token)
     files_list = yandex_disk.get_files_list()
     pprint(files_list)
